@@ -33,4 +33,9 @@ public class RawOutputTestMetric implements TestMetric {
     public void printResults() {
         System.out.println(builder.toString());
     }
+
+	@Override
+	public String getResults() {
+		return builder.toString();
+	}
 }
