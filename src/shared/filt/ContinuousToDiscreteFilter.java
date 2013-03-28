@@ -47,6 +47,8 @@ public class ContinuousToDiscreteFilter implements DataSetFilter {
         
         // the description is no longer valid so generate a new one
         dataSet.setDescription(new DataSetDescription(dataSet));
-        dataSet.getDescription().setLabelDescription(new DataSetDescription(dataSet.getLabelDataSet()));
+        if (dataSet.getLabelDataSet() != null) {
+        	dataSet.getDescription().setLabelDescription(new DataSetDescription(dataSet.getLabelDataSet()));
+        }
     }
 }
