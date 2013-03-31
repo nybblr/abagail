@@ -86,7 +86,8 @@ public class ArffDataSetReader extends DataSetReader {
 		while (line != null) {
 			if (!line.isEmpty() && line.charAt(0) != '%') {
 				String[] values = pattern.split(line.trim());
-				double[] ins = new double[values.length];
+				double[] ins = new double[values.length-1];
+				double label = 0;
 				for (int i = 0; i < values.length; i++) {
 					String v = values[i];
 					// defaulting to 0 if attribute value unknown.
@@ -99,9 +100,16 @@ public class ArffDataSetReader extends DataSetReader {
 							d = valueMaps.get(i).get(v);
 						}
 	                }
-					ins[i] = d;
+					
+					if (i == values.length-1) {
+						label = d;
+					} else {
+						ins[i] = d;
+					}
 				}
+				Instance l = new Instance(label);
 				Instance i = new Instance(ins);
+				i.setLabel(l);
 				instances.add(i);
 			}
 			line = in.readLine();
