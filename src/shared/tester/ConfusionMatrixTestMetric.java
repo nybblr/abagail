@@ -6,7 +6,6 @@ import java.util.Map;
 import shared.AttributeType;
 import shared.DataSetDescription;
 import shared.Instance;
-import shared.reader.DataSetLabelBinarySeperator;
 
 /**
  * A test metric to generate a confusion matrix.  This metric expects the true labels
@@ -17,7 +16,7 @@ import shared.reader.DataSetLabelBinarySeperator;
  * @date 2013-03-05
  */
 public class ConfusionMatrixTestMetric implements TestMetric {
-
+	StringBuilder builder = new StringBuilder();
     /**
      * A matrix entry.  This class holds an expected and actual instance
      * as a pair, and defines equals and hashCode for that pair.
@@ -172,35 +171,40 @@ public class ConfusionMatrixTestMetric implements TestMetric {
 
     @Override
     public void printResults() {
-        System.out.println("Confusion Matrix:");
-        System.out.println();
+        System.out.println(getResults());
+    }
+
+	@Override
+	public String getResults() {
+		builder.append("Confusion Matrix:\n\n");
         //TODO: substitute letters instead of the acutal values, for the axes (like weka)
         //print the top labels
         for (String l : labelStrs) {
-            System.out.print("\t");
-            System.out.print(l);
+        	builder.append("\t");
+        	builder.append(l);
         }
-        System.out.print("\t");
-        System.out.print("?");
+        builder.append("\t");
+        builder.append("?");
         for (int ii = 0; ii < labels.length; ii++) {
             Instance lr = labels[ii];
-            System.out.println();
-            System.out.print(labelStrs[ii]);
+            builder.append("\n");
+            builder.append(labelStrs[ii]);
             for (Instance lc : labels) {
                 Integer val = matrix.get(new MatrixEntry(lr, lc));
                 if (val == null) {
                     val = 0;
                 }
-                System.out.print("\t");
-                System.out.print(val);
+                builder.append("\t");
+                builder.append(val);
             }
             Integer val = matrix.get(new MatrixEntry(lr, this.nullLabel));
             if (val == null) {
                 val = 0;
             }
-            System.out.print("\t");
-            System.out.print(val);
+            builder.append("\t");
+            builder.append(val);
         }
-        System.out.println();
-    }
+        builder.append("\n");
+		return builder.toString();
+	}
 }

@@ -22,6 +22,9 @@ public class NeuralNetworkTester implements Tester {
         this.metrics = metrics;
     }
 
+    /**
+     * Test the {@link NeuralNetwork} using an array of {@link Instance}s that define network weights.
+     */
     @Override
     public void test(Instance[] instances) {
         for (int i = 0; i < instances.length; i++) {

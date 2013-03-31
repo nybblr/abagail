@@ -1,8 +1,6 @@
 package shared.tester;
 
 import shared.Instance;
-import shared.reader.DataSetLabelBinarySeperator;
-import util.linalg.Vector;
 
 /**
  * A test metric for accuracy.  This metric reports of % correct and % incorrect for a test run.
@@ -11,14 +9,14 @@ import util.linalg.Vector;
  * @date 2013-03-05
  */
 public class AccuracyTestMetric implements TestMetric {
-
+	StringBuilder builder = new StringBuilder();
     private int count;    
     private int countCorrect;
-    
+
     @Override
     public void addResult(Instance expected, Instance actual) {
         Comparison c = new Comparison(expected, actual);
-
+        
         count++;
         if (c.isAllCorrect()) {
             countCorrect++;
@@ -30,15 +28,22 @@ public class AccuracyTestMetric implements TestMetric {
     }
 
     public void printResults() {
+        System.out.println(getResults());
+    }
+
+	@Override
+	public String getResults() {
         //only report results if there were any results to report.
+		builder = new StringBuilder();
         if (count > 0) {
             double pctCorrect   = getPctCorrect();
             double pctIncorrect = (1 - pctCorrect);
-            System.out.println(String.format("Correctly Classified Instances: %.02f%%",   100 * pctCorrect));
-            System.out.println(String.format("Incorrectly Classified Instances: %.02f%%", 100 * pctIncorrect));
+            builder.append(String.format("Correctly Classified Instances: %.02f%%\n",   100 * pctCorrect));
+            builder.append(String.format("Incorrectly Classified Instances: %.02f%%\n", 100 * pctIncorrect));
         } else {
 
-            System.out.println("No results added.");
+        	builder.append("No results added.\n");
         }
-    }
+		return builder.toString();
+	}
 }

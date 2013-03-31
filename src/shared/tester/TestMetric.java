@@ -1,7 +1,6 @@
 package shared.tester;
 
 import shared.Instance;
-import util.linalg.Vector;
 
 /**
  * This interface defines an API for test metrics.  Test metrics are notified by the Tester
@@ -12,8 +11,7 @@ import util.linalg.Vector;
  * @author Jesse Rosalia (https://www.github.com/theJenix)
  * @date 2013-03-05
  */
-public interface TestMetric {
-
+public interface TestMetric {	
     /**
      * Add a test result to the metric.  The metric will compare the values and
      * accumulate what data it needs.
@@ -28,4 +26,9 @@ public interface TestMetric {
      * 
      */
     public void printResults();
+    
+    /**
+     * @return the values collected by this test metric as a {@linkplain String}
+     */
+    public String getResults();
 }

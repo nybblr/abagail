@@ -42,8 +42,9 @@ public class LabelSelectFilter implements DataSetFilter {
             	} 
             	k++;
             }
+            Instance label = new Instance(instance.getData().get(labelIndex));
             instance.setData(input);
-            instance.setLabel(new Instance(instance.getData().get(labelIndex)));
+            instance.setLabel(label);
         }
         dataSet.setDescription(new DataSetDescription(dataSet));
 	}

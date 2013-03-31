@@ -92,23 +92,38 @@ public class DataSet {
     public void setInstances(Instance[] instances) {
         this.instances = instances;
     }
+    
     /**
-     * Get the label data set
-     * @return the label data set
+     * Get the label {@linkplain DataSet}
+     * @return the label {@linkplain DataSet}
      */
     public DataSet getLabelDataSet() {
-        Instance[] labels = new Instance[instances.length];
-        for (int i = 0; i < labels.length; i++) {
-            labels[i] = instances[i].getLabel();
-            if (labels[i].getWeight() == 1.0) {
-                labels[i].setWeight(instances[i].getWeight());
-            }
-        }
-        DataSetDescription labelDescription = null;
-        if (description != null) {
-            labelDescription = description.getLabelDescription();
-        }
-        return new DataSet(labels, labelDescription);
+    	if (instances[0].getLabel() != null) {
+	        Instance[] labels = new Instance[instances.length];
+	        for (int i = 0; i < labels.length; i++) {
+	            labels[i] = instances[i].getLabel();
+	            if (labels[i].getWeight() == 1.0) {
+	                labels[i].setWeight(instances[i].getWeight());
+	            }
+	        }
+	        DataSetDescription labelDescription = null;
+	        if (description != null) {
+	            labelDescription = description.getLabelDescription();
+	        }
+	        	return new DataSet(labels, labelDescription);
+	    	}
+    	return null;
+    }
+    
+    /**
+     * Set the label {@linkplain DataSet}
+     * @param labels the labels to set
+     */
+    public void setLabelDataSet(DataSet labelSet) {
+    	Instance[] labels = labelSet.getInstances();
+    	for (int i = 0; i < labels.length; i++) {
+    		instances[i].setLabel(labels[i]);
+    	}
     }
     
     /**
