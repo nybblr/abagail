@@ -23,7 +23,7 @@ public class MazeMDPTest {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        MazeMarkovDecisionProcess maze = MazeMarkovDecisionProcess.load("testmaze.txt");
+        MazeMarkovDecisionProcess maze = MazeMarkovDecisionProcess.load("/Users/Jonathan/Development/Java/AbagailFork/smallMaze.lay");
         System.out.println(maze);
         
         ValueIteration vi = new ValueIteration(.95, maze);

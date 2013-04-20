@@ -73,7 +73,7 @@ public class MazeMarkovDecisionProcessVisualization {
                     int a = p.getAction(mmdp.stateFor(x,y));
                     switch(a) {
                     	case MazeMarkovDecisionProcess.MOVE_DOWN:
-                    	    ret += 'V';
+                    	    ret += 'v';
                     		break;
                     	case MazeMarkovDecisionProcess.MOVE_UP:
                     	    ret += '^';
