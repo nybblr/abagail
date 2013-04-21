@@ -16,6 +16,20 @@ import dist.Distribution;
  * @version 1.0
  */
 public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
+	public static int transitionProbabilityCalls = 0;
+	public static int rewardCalls = 0;
+	public static int sampleStateCalls = 0;
+	
+	public static void resetStats() {
+		transitionProbabilityCalls = 0;
+		rewardCalls = 0;
+		sampleStateCalls = 0;
+	}
+	
+	public static void printStats() {
+		System.out.println("Called: transition => " + transitionProbabilityCalls + ", reward => " + rewardCalls + ", sample => " + sampleStateCalls);
+	}
+	
     /** The failure probabilities */
     private static final double FAIL_MOVE = .1; // probability we don't move
     private static final double FAIL_TURN = .2; // probability we do about-face
@@ -56,7 +70,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     /** The character representing the wumpus */
     public static final char WUMPUS = 'w';
     /** The character representing the gold */
-    public static final char GOLD = 'g';
+    public static final char GOLD = 'x';
 //    /** The character representing the agent */
 //    public static final char AGENT = 'o';
     
@@ -120,6 +134,8 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     	
     	m = wmdp.shootKill(wmdp.turnRight(0));
     	System.out.println(wmdp.stateToString(m));
+    	
+//    	m = wmdp.stateFor(x, y, d, g, a, w)
     }
     
     /**
@@ -381,8 +397,11 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     public Pair grabStates(int state) {
     	Pair p = new Pair();
     	
-    	p.add(drop(state), FAIL_GRAB, (gFor(state) == 0) ? RWD_NONTERM : -RWD_GOLD); // might drop gold
-    	p.add(grab(state), 1-FAIL_GRAB, (gFor(state) == 1) ? RWD_NONTERM : RWD_GOLD); // it might work
+    	double d = (gFor(state) == 0) ? RWD_NONTERM : -RWD_GOLD;
+    	double g = (gFor(state) == 1 || !inGold(state)) ? RWD_NONTERM : RWD_GOLD;
+    	
+    	p.add(drop(state), FAIL_GRAB, d); // might drop gold
+    	p.add(grab(state), 1-FAIL_GRAB, g); // it might work
     	
     	return p;
     }
@@ -408,6 +427,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     		break;
     	default:
     		p = new Pair();
+    		System.out.println("UNRECOGNIZED!!!");
     	}
     	
     	return p;
@@ -431,6 +451,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
      * @see rl.MarkovDecisionProcess#reward(int, int)
      */
     public double reward(int state, int action) {
+    	rewardCalls++;
         return actionStates(state, action).reward;
     }
 
@@ -438,6 +459,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
      * @see rl.MarkovDecisionProcess#transitionProbability(int, int, int)
      */
     public double transitionProbability(int i, int j, int a) {
+    	transitionProbabilityCalls++;
     	Map<Integer,Double> map = actionStates(i, a).map;
     	if (map.containsKey(j))
     		return map.get(j);
@@ -448,6 +470,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
      * @see rl.MarkovDecisionProcess#sampleState(int, int)
      */
     public int sampleState(int i, int a) {
+    	sampleStateCalls++;
         return ((NavigableMap<Double,Integer>)actionStates(i, a).rmap)
         		.ceilingEntry(random.nextDouble()).getValue();
     }

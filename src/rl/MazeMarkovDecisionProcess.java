@@ -11,6 +11,20 @@ import dist.Distribution;
  * @version 1.0
  */
 public class MazeMarkovDecisionProcess implements MarkovDecisionProcess {
+	public static int transitionProbabilityCalls = 0;
+	public static int rewardCalls = 0;
+	public static int sampleStateCalls = 0;
+	
+	public static void resetStats() {
+		transitionProbabilityCalls = 0;
+		rewardCalls = 0;
+		sampleStateCalls = 0;
+	}
+	
+	public static void printStats() {
+		System.out.println("Called: transition => " + transitionProbabilityCalls + ", reward => " + rewardCalls + ", sample => " + sampleStateCalls);
+	}
+	
     /** The default failure probability */
     private static final double FAILURE_PROBABILITY = .01;
     
@@ -145,6 +159,7 @@ public class MazeMarkovDecisionProcess implements MarkovDecisionProcess {
      * @see rl.MarkovDecisionProcess#reward(int, int)
      */
     public double reward(int state, int action) {
+    	rewardCalls++;
         if (state == goal) {
             return REWARD;
         } else {
@@ -156,6 +171,7 @@ public class MazeMarkovDecisionProcess implements MarkovDecisionProcess {
      * @see rl.MarkovDecisionProcess#transitionProbability(int, int, int)
      */
     public double transitionProbability(int i, int j, int a) {
+    	transitionProbabilityCalls++;
         int startX = xFor(i), startY = yFor(i);
         int endX = xFor(j), endY = yFor(j);
         if (startX != endX && startY != endY) {
@@ -204,6 +220,7 @@ public class MazeMarkovDecisionProcess implements MarkovDecisionProcess {
      * @see rl.MarkovDecisionProcess#sampleState(int, int)
      */
     public int sampleState(int i, int a) {
+    	sampleStateCalls++;
         if (Distribution.random.nextDouble() < motionFailureProbability) {
         	return i;
         }
