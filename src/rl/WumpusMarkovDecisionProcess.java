@@ -75,6 +75,53 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     
     private Random random;
     
+    public static void main(String[] args) throws Exception {
+    	WumpusMarkovDecisionProcess wmdp = WumpusMarkovDecisionProcess.load("/Users/Jonathan/Development/Java/AbagailFork/wumpus.lay");
+    	
+    	int x = 2;
+    	int y = 3;
+    	int d = 1;
+    	int g = 1;
+    	int a = 1;
+    	int w = 1;
+    	int s = wmdp.stateFor(x,y,d,g,a,w);
+    	
+    	if (
+    		wmdp.xFor(s) == x &&
+    		wmdp.yFor(s) == y &&
+    		wmdp.dFor(s) == d &&
+    		wmdp.gFor(s) == g &&
+    		wmdp.aFor(s) == a &&
+    		wmdp.wFor(s) == w
+    			)
+    		System.out.println("That worked!!!");
+    	else
+    		System.out.println("DIDN'T WORK");
+    	
+    	System.out.println(wmdp.xFor(s));
+    	System.out.println(wmdp.yFor(s));
+    	System.out.println(wmdp.dFor(s));
+    	System.out.println(wmdp.gFor(s));
+    	System.out.println(wmdp.aFor(s));
+    	System.out.println(wmdp.wFor(s));
+    	
+    	System.out.println(wmdp.y(wmdp.p(1, 3)));
+    	
+    	System.out.println(wmdp.squareAt(2,3) == PIT);
+    	
+    	int m = wmdp.moveBy(wmdp.moveBy(0, 3, 3), 1, -1);
+    	System.out.println(wmdp.stateToString(m));
+    	
+    	m = wmdp.move(wmdp.turnRight(wmdp.move(0)));
+    	System.out.println(wmdp.stateToString(m));
+    	
+    	m = wmdp.arrow(0);
+    	System.out.println(wmdp.stateToString(m));
+    	
+    	m = wmdp.shootKill(wmdp.turnRight(0));
+    	System.out.println(wmdp.stateToString(m));
+    }
+    
     /**
      * Make a new wumpus markov decision process
      */
@@ -175,7 +222,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
      * @return the g gold
      */
     public int gFor(int state) {
-    	return (state & SHFT_GOLD);
+    	return (state & SHFT_GOLD) >>> 0;
     }
     /**
      * Get the a arrow for the given state
@@ -183,7 +230,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
      * @return the a arrow
      */
     public int aFor(int state) {
-    	return (state & SHFT_ARROW);
+    	return (state & SHFT_ARROW) >>> 1;
     }
     /**
      * Get the w wumpus for the given state
@@ -191,7 +238,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
      * @return the w wumpus
      */
     public int wFor(int state) {
-    	return (state & SHFT_WUMPUS);
+    	return (state & SHFT_WUMPUS) >>> 2;
     }
     
     public boolean inPit(int state) {
@@ -254,6 +301,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     
     // Kill wumpus!
     public int shootKill(int state) {
+    	if (aFor(state) == 1) return state;
     	state = arrow(state);
     	int w = wFor(state);
     	int wx = x(wumpus);
@@ -262,13 +310,17 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     	int y = yFor(state);
     	switch(dFor(state)) {
     	case RIGHT: // wumpus to the right?
-    		if (x == wx && x >= wx) w = 1;
+    		if (y == wy && x <= wx) w = 1;
+    		break;
     	case UP: // wumpus above?
-    		if (y == wy && y <= wy) w = 1;
+    		if (x == wx && y >= wy) w = 1;
+    		break;
     	case LEFT: // wumpus to the left?
-    		if (x == wx && x <= wx) w = 1;
+    		if (y == wy && x >= wx) w = 1;
+    		break;
     	case DOWN: // wumpus below?
-    		if (y == wy && y >= wy) w = 1;
+    		if (x == wx && y <= wy) w = 1;
+    		break;
     	}
     	
     	return stateFor(xFor(state), yFor(state), dFor(state), gFor(state), aFor(state), w);
@@ -343,16 +395,16 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     		p = moveStates(state);
     		break;
     	case TURN_LEFT:
-    		p = moveStates(state);
+    		p = turnLeftStates(state);
     		break;
     	case TURN_RIGHT:
-    		p = moveStates(state);
+    		p = turnRightStates(state);
     		break;
     	case SHOOT:
-    		p = moveStates(state);
+    		p = shootStates(state);
     		break;
     	case GRAB:
-    		p = moveStates(state);
+    		p = grabStates(state);
     		break;
     	default:
     		p = new Pair();
@@ -461,27 +513,29 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
         String ret = "";
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                if (x == xFor(state) && y == yFor(state)) {
-                	switch(dFor(state)) {
-                	case RIGHT:
-                		ret += ">";
-                	case UP:
-                		ret += "^";
-                	case LEFT:
-                		ret += "<";
-                	case DOWN:
-                		ret += "v";
-                	}
-                } else {
+//                if (x == xFor(state) && y == yFor(state)) {
+//                	switch(dFor(state)) {
+//                	case RIGHT:
+//                		ret += ">";
+//                	case UP:
+//                		ret += "^";
+//                	case LEFT:
+//                		ret += "<";
+//                	case DOWN:
+//                		ret += "v";
+//                	}
+//                } else {
                     ret += world[y][x];
-                }
+//                }
             }
             ret += "\n";
         }
         return ret;
-    }    
+    }
     
-
+    public String stateToString(int state) {
+    	return "("+xFor(state)+","+yFor(state)+","+dFor(state)+") : ["+gFor(state)+aFor(state)+wFor(state)+"]";
+    }
 
 	private class Pair {
 		public Map<Integer,Double> map;
