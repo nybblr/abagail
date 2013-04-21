@@ -24,7 +24,7 @@ public class WumpusMDPTest {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        WumpusMarkovDecisionProcess maze = WumpusMarkovDecisionProcess.load("/Users/Jonathan/Development/Java/AbagailFork/deathThroes.lay");
+        WumpusMarkovDecisionProcess maze = WumpusMarkovDecisionProcess.load("deathThroes.lay");
         System.out.println(maze.toString(0));
         
         ValueIteration vi = new ValueIteration(.95, maze);
@@ -77,7 +77,7 @@ public class WumpusMDPTest {
         
         System.out.println("I got a reward of "+reward);
         
-        int iterations = 50000;
+        int iterations = 2000000;
         QLambda ql = new QLambda(.5, .95, .2, 1, new EpsilonGreedyStrategy(.3), maze);
         FixedIterationTrainer fit = new FixedIterationTrainer(ql, iterations);
         maze.resetStats();
