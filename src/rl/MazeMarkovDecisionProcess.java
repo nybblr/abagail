@@ -327,5 +327,8 @@ public class MazeMarkovDecisionProcess implements MarkovDecisionProcess {
         return ret;
     }    
     
+    public String stateToString(int state) {
+    	return "("+xFor(state)+", "+yFor(state)+")";
+    }
 
 }

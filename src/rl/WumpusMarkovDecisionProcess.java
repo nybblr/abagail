@@ -71,6 +71,8 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     public static final char WUMPUS = 'w';
     /** The character representing the gold */
     public static final char GOLD = 'x';
+    /** The character representing the gold AND den! */
+    public static final char GOLDEN = '@';
 //    /** The character representing the agent */
 //    public static final char AGENT = 'o';
     
@@ -151,7 +153,7 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
         boolean brk = false;
         for (int y = 0; y < getHeight(); y++) {
         	for (int x = 0; x < getWidth(); x++) {
-        		if (world[y][x] == WUMPUS) {
+        		if (world[y][x] == WUMPUS || world[y][x] == GOLDEN) {
         			this.wumpus = p(x, y);
         			brk = true;
         		}
@@ -262,12 +264,14 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     }
     
     public boolean inDen(int state) {
-    	return squareAt(xFor(state), yFor(state)) == WUMPUS;
+    	char s = squareAt(xFor(state), yFor(state));
+    	return s == WUMPUS || s == GOLDEN;
     }
     
 
     public boolean inGold(int state) {
-    	return squareAt(xFor(state), yFor(state)) == GOLD;
+    	char s = squareAt(xFor(state), yFor(state));
+    	return s == GOLD || s == GOLDEN;
     }
     
     public char squareAt(int x, int y) {
@@ -519,6 +523,8 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
                     world[i][j] = WUMPUS;
                 } else if (c == GOLD) {
                     world[i][j] = GOLD;
+                } else if (c == GOLDEN) {
+                	world[i][j] = GOLDEN;
                 } else {
                     world[i][j] = EMPTY;
                 }
@@ -558,6 +564,23 @@ public class WumpusMarkovDecisionProcess implements MarkovDecisionProcess {
     
     public String stateToString(int state) {
     	return "("+xFor(state)+","+yFor(state)+","+dFor(state)+") : ["+gFor(state)+aFor(state)+wFor(state)+"]";
+    }
+    
+    public String actionToString(int action) {
+    	switch(action) {
+    	case MOVE:
+    		return "MOVE";
+    	case TURN_LEFT:
+    		return "LEFT";
+    	case TURN_RIGHT:
+    		return "RIGHT";
+    	case SHOOT:
+    		return "SHOOT";
+    	case GRAB:
+    		return "GRAB";
+    	default:
+    		return "INVALID";
+    	}
     }
 
 	private class Pair {

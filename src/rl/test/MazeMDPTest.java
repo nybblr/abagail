@@ -40,6 +40,15 @@ public class MazeMDPTest {
         MazeMarkovDecisionProcessVisualization mazeVis =
             new MazeMarkovDecisionProcessVisualization(maze);
         System.out.println(mazeVis.toString(p));
+        
+        int curr = maze.sampleInitialState();
+        double reward = 0;
+        while (!maze.isTerminalState(curr)) {
+        	reward += maze.reward(curr, p.getAction(curr));
+        	curr = maze.sampleState(curr, p.getAction(curr));
+        	System.out.println(maze.stateToString(curr));
+        }
+        System.out.println("I got a reward of "+reward);
 
         PolicyIteration pi = new PolicyIteration(.95, maze);
         tt = new ThresholdTrainer(pi);
@@ -53,6 +62,15 @@ public class MazeMDPTest {
         System.out.println("and " + (finishTime - startTime) + " ms");
         maze.printStats();
         System.out.println(mazeVis.toString(p));
+        
+        curr = maze.sampleInitialState();
+        reward = 0;
+        while (!maze.isTerminalState(curr)) {
+        	reward += maze.reward(curr, p.getAction(curr));
+        	curr = maze.sampleState(curr, p.getAction(curr));
+        	System.out.println(maze.stateToString(curr));
+        }
+        System.out.println("I got a reward of "+reward);
         
         int iterations = 50000;
         QLambda ql = new QLambda(.5, .95, .2, 1, new EpsilonGreedyStrategy(.3), maze);

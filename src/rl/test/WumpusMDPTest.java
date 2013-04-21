@@ -24,7 +24,7 @@ public class WumpusMDPTest {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        WumpusMarkovDecisionProcess maze = WumpusMarkovDecisionProcess.load("/Users/Jonathan/Development/Java/AbagailFork/wumpus.lay");
+        WumpusMarkovDecisionProcess maze = WumpusMarkovDecisionProcess.load("/Users/Jonathan/Development/Java/AbagailFork/deathThroes.lay");
         System.out.println(maze.toString(0));
         
         ValueIteration vi = new ValueIteration(.95, maze);
@@ -45,9 +45,10 @@ public class WumpusMDPTest {
         int curr = maze.sampleInitialState();
         double reward = 0;
         while (!maze.isTerminalState(curr)) {
-        	reward += maze.reward(curr, p.getAction(curr));
-        	curr = maze.sampleState(curr, p.getAction(curr));
-        	System.out.println(maze.stateToString(curr));
+        	int action = p.getAction(curr);
+        	reward += maze.reward(curr, action);
+        	curr = maze.sampleState(curr, action);
+        	System.out.println(maze.actionToString(action)+" => "+maze.stateToString(curr));
         }
         
         System.out.println("I got a reward of "+reward);
@@ -68,9 +69,10 @@ public class WumpusMDPTest {
         curr = maze.sampleInitialState();
         reward = 0;
         while (!maze.isTerminalState(curr)) {
-        	reward += maze.reward(curr, p.getAction(curr));
-        	curr = maze.sampleState(curr, p.getAction(curr));
-        	System.out.println(maze.stateToString(curr));
+        	int action = p.getAction(curr);
+        	reward += maze.reward(curr, action);
+        	curr = maze.sampleState(curr, action);
+        	System.out.println(maze.actionToString(action)+" => "+maze.stateToString(curr));
         }
         
         System.out.println("I got a reward of "+reward);
@@ -93,9 +95,10 @@ public class WumpusMDPTest {
         curr = maze.sampleInitialState();
         reward = 0;
         while (!maze.isTerminalState(curr)) {
-        	reward += maze.reward(curr, p.getAction(curr));
-        	curr = maze.sampleState(curr, p.getAction(curr));
-        	System.out.println(maze.stateToString(curr));
+        	int action = p.getAction(curr);
+        	reward += maze.reward(curr, action);
+        	curr = maze.sampleState(curr, action);
+        	System.out.println(maze.actionToString(action)+" => "+maze.stateToString(curr));
         }
         
         System.out.println("I got a reward of "+reward);
@@ -117,9 +120,10 @@ public class WumpusMDPTest {
         curr = maze.sampleInitialState();
         reward = 0;
         while (!maze.isTerminalState(curr)) {
-        	reward += maze.reward(curr, p.getAction(curr));
-        	curr = maze.sampleState(curr, p.getAction(curr));
-        	System.out.println(maze.stateToString(curr));
+        	int action = p.getAction(curr);
+        	reward += maze.reward(curr, action);
+        	curr = maze.sampleState(curr, action);
+        	System.out.println(maze.actionToString(action)+" => "+maze.stateToString(curr));
         }
         
         System.out.println("I got a reward of "+reward);
